@@ -1,15 +1,18 @@
-import { Outlet } from "react-router-dom/dist"
-import ScrollToTop from "../components/ScrollToTop"
-import { Navbar } from "../components/Navbar"
-import { Footer } from "../components/Footer"
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import ScrollToTop from "../components/ScrollToTop";
 
-// Base component that maintains the navbar and footer throughout the page and the scroll to top functionality.
-export const Layout = () => {
+export default function Layout() {
     return (
-        <ScrollToTop>
+        <div className="d-flex flex-column min-vh-100">
+            <ScrollToTop />
             <Navbar />
+            <main className="flex-grow-1">
                 <Outlet />
-            <Footer />
-        </ScrollToTop>
-    )
+            </main>
+            <footer className="bg-dark text-light text-center py-3 mt-auto">
+                <small>© 2026 TechDrop — Tu tienda de tecnología</small>
+            </footer>
+        </div>
+    );
 }
