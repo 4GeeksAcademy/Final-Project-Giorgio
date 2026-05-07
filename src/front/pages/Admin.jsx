@@ -113,6 +113,21 @@ export default function Admin() {
         setError(null);
     };
 
+    const searchUnsplashImage = async () => {
+        if (!form.name) {
+            setError("Escribe el nombre del producto primero");
+            return;
+        }
+        const UNSPLASH_KEY = import.meta.env.VITE_UNSPLASH_KEY;
+        const res = await fetch(`https://api.unsplash.com/search/photos?query=${form.name}&per_page=1&client_id=${UNSPLASH_KEY}`);
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+            setForm({ ...form, image_url: data.results[0].urls.regular });
+        } else {
+            setError("No se encontró imagen para ese producto");
+        }
+    };
+
     return (
         <div className="container py-5">
             <h1 className="fw-bold mb-2">⚙️ Panel de administración</h1>
@@ -177,14 +192,26 @@ export default function Admin() {
                     </div>
                     <div className="col-md-8">
                         <label className="form-label fw-semibold">URL de imagen</label>
-                        <input
-                            type="text"
-                            name="image_url"
-                            className="form-control"
-                            value={form.image_url}
-                            onChange={handleChange}
-                            placeholder="https://..."
-                        />
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                name="image_url"
+                                className="form-control"
+                                value={form.image_url}
+                                onChange={handleChange}
+                                placeholder="https://..."
+                            />
+                            <button
+                                className="btn btn-outline-secondary"
+                                type="button"
+                                onClick={searchUnsplashImage}
+                            >
+                                🔍 Buscar imagen
+                            </button>
+                        </div>
+                        {form.image_url && (
+                            <img src={form.image_url} alt="preview" className="mt-2 rounded" style={{ height: "80px", objectFit: "cover" }} />
+                        )}
                     </div>
                     <div className="col-md-4">
                         <label className="form-label fw-semibold">Categoría</label>
